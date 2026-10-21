@@ -1,37 +1,52 @@
 #!/usr/bin/env bash
-# Deploy an ADDITIONAL isolated Compose lab without modifying old EcoShop volumes.
-# Public container images do not require login. Bypass a desktop-only secretservice
-# credential helper which fails on headless Ubuntu with no DBus / X11 DISPLAY.
+# Additional isolated Compose lab; never stop, prune or overwrite the old EcoShop.
+# Ubuntu 18.04/headless may have a desktop credential helper configured in ~/.docker/config.json.
+# Compose 2.18 may still invoke it even when DOCKER_CONFIG is temporarily overridden.
+# Workaround: explicitly pull each public image with docker --config CLEAN_DIR,
+# then start Compose with --pull never.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-
 bash scripts/preflight.sh
 
-# Never edit ~/.docker/config.json or /root/.docker/config.json.
-# Use a temporary isolated Docker CLI config with NO credentials for public pulls.
-public_docker_config="$(mktemp -d)"
-chmod 700 "$public_docker_config"
-printf '{"auths":{}}\n' > "$public_docker_config/config.json"
-chmod 600 "$public_docker_config/config.json"
+clean_config="$(mktemp -d)"
+chmod 700 "$clean_config"
+printf '{"auths":{}}\n' > "$clean_config/config.json"
+chmod 600 "$clean_config/config.json"
 cleanup() {
-  rm -f -- "$public_docker_config/config.json"
-  rmdir -- "$public_docker_config" 2>/dev/null || true
+  rm -f -- "$clean_config/config.json"
+  rmdir -- "$clean_config" 2>/dev/null || true
 }
 trap cleanup EXIT
 
-echo 'Pulling public images without GUI Docker credential helpers...'
-if ! sudo env DOCKER_CONFIG="$public_docker_config" docker compose pull; then
-  echo 'PULL_FAILED: containers were not started. Check registry/network/disk; old volumes were not touched.' >&2
+# Obtain the exact pinned image list from validated Compose config.
+if ! image_names="$(docker compose config --images)"; then
+  echo 'Cannot list Compose images; no services started.' >&2
+  exit 1
+fi
+mapfile -t images < <(printf '%s\n' "$image_names" | sed '/^[[:space:]]*$/d' | sort -u)
+if (( ${#images[@]} == 0 )); then
+  echo 'No images found in Compose configuration; abort.' >&2
+  exit 1
+fi
+echo "Pulling ${#images[@]} public images using explicit clean Docker CLI config..."
+for img in "${images[@]}"; do
+  echo "-- Pulling $img"
+  # Docker global --config flag selects a config with NO credsStore/credHelpers.
+  # sudo root can read the temporary 0700 folder; Docker login state is unchanged.
+  if ! sudo docker --config "$clean_config" pull "$img"; then
+    echo "PULL_FAILED on image: $img" >&2
+    echo 'If D-Bus / credentials still appear, report this single docker pull error.' >&2
+    echo 'No Compose services started; old EcoShop volumes/containers untouched.' >&2
+    exit 1
+  fi
+done
+
+echo 'All images present locally. Starting ONLY the NEW Compose stack (never pull)...'
+if ! sudo docker --config "$clean_config" compose up -d --pull never; then
+  echo 'START_FAILED: inspect NEW Compose logs/ps. Do not run down -v or volume prune.' >&2
   exit 1
 fi
 
-echo 'Starting the NEW isolated Compose lab...'
-if ! sudo env DOCKER_CONFIG="$public_docker_config" docker compose up -d; then
-  echo 'START_FAILED: some lab containers may exist; inspect docker compose ps/logs. DO NOT delete volumes.' >&2
-  exit 1
-fi
-
-echo 'New lab container status:'
 sudo docker compose ps
-echo 'DEPLOY_FINISHED: next run bash scripts/smoke-test.sh'
-echo 'Original EcoShop Docker-run containers and volumes were not removed or stopped.'
+echo 'DEPLOY_FINISHED: now run bash scripts/smoke-test.sh'
+echo 'Original EcoShop services and volumes were not intentionally stopped or removed.'
