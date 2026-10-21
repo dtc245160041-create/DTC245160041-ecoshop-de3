@@ -3,6 +3,22 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 fail=0
+# Abort clearly when an image pull failed before any lab service was created.
+# Avoid cascades of curl ECONNREFUSED and misleading JSON parser tracebacks.
+required=(mysql wordpress phpmyadmin nginx grafana prometheus loki promtail node-exporter cadvisor mysql-exporter nginx-exporter)
+missing=()
+for service in "${required[@]}"; do
+  id="$(sudo docker compose ps -q "$service" 2>/dev/null || true)"
+  if [[ -z "$id" ]] || [[ "$(sudo docker inspect --format '{{.State.Running}}' "$id" 2>/dev/null || true)" != "true" ]]; then
+    missing+=("$service")
+  fi
+done
+if (( ${#missing[@]} )); then
+  echo "NOT_READY: new Compose lab services not running: ${missing[*]}" >&2
+  echo 'First run: bash scripts/deploy-lab.sh (must finish successfully).' >&2
+  echo 'Current original EcoShop must not be stopped; never run docker volume prune.' >&2
+  exit 1
+fi
 check_http() {
   local label="$1" url="$2" code
   code="$(curl -L -sS --max-time 15 -o /dev/null -w '%{http_code}' "$url")" || code="000"
