@@ -7,7 +7,8 @@ from pathlib import Path
 root = Path(__file__).resolve().parents[1]
 result = subprocess.run(
     ["docker", "compose", "config", "--format", "json"],
-    cwd=root, check=True, capture_output=True, text=True
+    cwd=str(root), check=True, stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE, universal_newlines=True
 )
 stack = json.loads(result.stdout)
 services = stack["services"]
