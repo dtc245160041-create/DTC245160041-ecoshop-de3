@@ -41,6 +41,9 @@ for img in "${images[@]}"; do
   fi
 done
 
+echo 'Preparing read access to public config bind mounts (no secrets/volumes changed)...'
+bash scripts/fix-config-permissions.sh --permissions-only
+
 echo 'All images present locally. Bootstrapping isolated MySQL and remaining services...'
 if ! bash scripts/repair-mysql-init.sh; then
   echo 'START_FAILED: inspect NEW Compose logs/ps. Never run down -v or volume prune.' >&2
