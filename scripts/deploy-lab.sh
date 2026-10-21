@@ -41,12 +41,11 @@ for img in "${images[@]}"; do
   fi
 done
 
-echo 'All images present locally. Starting ONLY the NEW Compose stack (never pull)...'
-if ! sudo docker --config "$clean_config" compose up -d --pull never; then
-  echo 'START_FAILED: inspect NEW Compose logs/ps. Do not run down -v or volume prune.' >&2
+echo 'All images present locally. Bootstrapping isolated MySQL and remaining services...'
+if ! bash scripts/repair-mysql-init.sh; then
+  echo 'START_FAILED: inspect NEW Compose logs/ps. Never run down -v or volume prune.' >&2
   exit 1
 fi
 
-sudo docker compose ps
 echo 'DEPLOY_FINISHED: now run bash scripts/smoke-test.sh'
 echo 'Original EcoShop services and volumes were not intentionally stopped or removed.'
