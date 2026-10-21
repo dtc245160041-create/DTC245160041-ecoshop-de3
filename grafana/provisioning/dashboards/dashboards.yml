@@ -1,0 +1,10 @@
+apiVersion: 1
+providers:
+  - name: EcoShop De3
+    orgId: 1
+    folder: EcoShop Monitoring
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /etc/grafana/dashboards
