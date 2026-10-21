@@ -1,0 +1,27 @@
+name: Validate EcoShop Compose
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  static-validation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create dummy secret values for static config validation
+        run: |
+          cp .env.example .env
+          sed -i 's/=GENERATE_BEFORE_DEPLOY/=CI_TEST_VALUE_ONLY/g' .env
+          chmod 600 .env
+      - name: Validate Docker Compose interpolation
+        run: docker compose config -q
+      - name: Verify isolation and required services
+        run: python3 scripts/verify-config.py
+      - name: Shell syntax
+        run: |
+          for f in scripts/*.sh db/init/*.sh; do bash -n "$f"; done
+      - name: Verify JSON dashboard
+        run: python3 -m json.tool grafana/dashboards/ecoshop-de3.json >/dev/null
