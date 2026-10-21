@@ -1,25 +1,39 @@
 #!/usr/bin/env bash
-# Restore ONLY into new lab volumes, never mutate originals.
-# Usage: scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql ecoshop-wp-restored
+# Safely restore a SQL dump and wp-content from a previous WordPress volume into NEW lab volumes only.
+# Will not touch the source volume or old MariaDB server. Single-use per fresh lab.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-if [[ $# -ne 2 ]]; then echo 'Usage: scripts/restore-lab.sh /absolute/path/wordpress.sql source_wordpress_volume' >&2; exit 2; fi
+if [[ $# -ne 2 ]]; then
+  echo 'Usage: scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql SOURCE_WP_VOLUME' >&2
+  exit 2
+fi
 sql="$1"; source_volume="$2"
-[[ -s "$sql" ]] || { echo "Invalid SQL backup: $sql" >&2; exit 1; }
-[[ -f .env ]] || { echo 'Missing .env; run scripts/init-env.sh' >&2; exit 1; }
-source_volume_found="$(sudo docker volume inspect "$source_volume" --format '{{.Name}}' 2>/dev/null || true)"
-[[ "$source_volume_found" == "$source_volume" ]] || { echo "Missing source volume: $source_volume" >&2; exit 1; }
-if [[ "$source_volume" == de3_wp_data || "$source_volume" == de3_mysql_data ]]; then echo 'Refusing to use lab destination as source'; exit 1; fi
+[[ -s "$sql" && -f .env ]] || { echo 'Missing SQL backup or .env.' >&2; exit 1; }
+[[ "$source_volume" =~ ^[a-zA-Z0-9][a-zA-Z0-9_.-]+$ ]] || { echo 'Invalid Docker volume name.' >&2; exit 1; }
+case "$source_volume" in de3_*|grafana-storage|ecoshop-loki-data) echo 'Refusing protected or lab volume'; exit 1;; esac
+sudo docker volume inspect "$source_volume" --format '{{.Name}}' >/dev/null
 sudo docker compose config -q
-sudo docker compose up -d mysql
-sudo docker compose exec -T mysql sh -c 'mysqladmin ping -h127.0.0.1 -uroot -p"$MYSQL_ROOT_PASSWORD" --silent'
-count="$(sudo docker compose exec -T mysql sh -c 'mysql -N -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE()"' | tr -d '\r')"
-[[ "$count" == 0 ]] || { echo 'STOP: destination DB is not empty. No overwrite.' >&2; exit 1; }
-echo 'Importing ONLY into de3_mysql_data...'
+sudo docker compose up -d mysql wordpress
+# WordPress php/wp-config.php is intentionally NEVER copied from the old environment.
+n="$(sudo docker compose exec -T mysql sh -c 'mysql -N -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE()"' | tr -d '\r[:space:]')"
+[[ "$n" == "0" ]] || { echo "STOP: lab database already contains $n tables. No import attempted." >&2; exit 1; }
+echo 'Importing SQL into ONLY de3_mysql_data ...'
 sudo docker compose exec -T mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < "$sql"
-echo 'SQL import completed.'
-sudo docker volume create de3_wp_data >/dev/null
-sudo docker run --rm -v de3_wp_data:/target:ro busybox:1.36 sh -c 'test -z "$(ls -A /target)"' || { echo 'STOP: destination de3_wp_data is not empty'; exit 1; }
-sudo docker run --rm -v "$source_volume:/source:ro" -v de3_wp_data:/target busybox:1.36 sh -eu -c 'test -d /source/wp-content; cp -a /source/. /target/; test -d /target/wp-content'
-echo 'WordPress files copied from the source volume clone; originals untouched.'
-echo 'Verify wp-config.php reads WORDPRESS_DB_* and update home/siteurl ONLY in lab before running WordPress.'
+# Lab WordPress core exists in the brand-new volume, but preserve its generated wp-config.php.
+sudo docker run --rm \
+  -v "$source_volume:/source:ro" \
+  -v de3_wp_data:/target \
+  busybox:1.36 sh -eu -c '
+    test -d /source/wp-content
+    mkdir -p /target/wp-content
+    if [ -d /target/wp-content/uploads ] && [ -n "$(ls -A /target/wp-content/uploads)" ]; then
+      echo "STOP: lab uploads already populated" >&2; exit 1
+    fi
+    cp -a /source/wp-content/. /target/wp-content/
+    chown -R 33:33 /target/wp-content
+  '
+# URL update applies ONLY to the newly imported MySQL lab, never source database.
+sql_update="UPDATE wp_options SET option_value='http://192.168.254.128:18080' WHERE option_name IN ('home','siteurl');"
+sudo docker compose exec -T mysql sh -c 'mysql -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "$1"' sh "$sql_update"
+echo 'LAB_RESTORE_DONE: check website port 18080 and tables in localhost:18081.'
+echo 'If imported SQL references MariaDB collations or fails, stop and inspect; originals untouched.'

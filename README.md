@@ -107,3 +107,24 @@ bash scripts/backup.sh
 Backup ở `private-backups/` (bị Git ignore); sao chép ra Windows hoặc ổ khác. **Không** chạy `docker compose down -v`, `docker volume prune`, `docker system prune --volumes`. Phải thay các App Password từng xuất hiện trong ảnh cũ.
 
 Repo chứa cấu hình và source dành cho môi trường lab. **Chưa chứng minh stack mới chạy được trên VM**; cần kiểm tra Compose v2, dịch vụ, dữ liệu và LogQL thật khi triển khai. Các ảnh trong báo cáo trước đây thuộc hệ thống Docker-run đã vận hành; không được coi là minh chứng tự động cho stack Compose mới.
+
+
+## 8. Lệnh chạy dễ nhất trên Ubuntu (không can thiệp stack cũ)
+
+```bash
+git clone https://github.com/dtc245160041-create/DTC245160041-ecoshop-de3.git
+cd DTC245160041-ecoshop-de3
+bash scripts/install-compose-plugin.sh
+bash scripts/init-env.sh
+bash scripts/deploy-lab.sh
+bash scripts/smoke-test.sh
+```
+
+Khi cần mang dữ liệu **cũ** vào **volume lab mới**, dùng **sau** khi đã đọc cảnh báo:
+```bash
+bash scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_up_data
+```
+
+Sau import, script chỉ sửa `home`/`siteurl` trong **MySQL lab**, không đổi SQL nguồn hoặc MariaDB cũ. Nếu tên volume gốc khác, kiểm tra `sudo docker volume ls` và chọn volume chứa `wp-content`.
+
+**Báo cáo thực hành:** `docs/acceptance-checklist.md` mô tả chính xác ảnh minh chứng cần chụp; báo cáo DOCX 15 trang được bàn giao riêng. Lịch sử có ít nhất ba commit theo rubric và một số commit tăng cường chất lượng.
