@@ -13,7 +13,7 @@ services:
       MYSQL_EXPORTER_PASSWORD: ${MYSQL_EXPORTER_PASSWORD:?Please_run_scripts/init-env.sh}
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./db/init:/docker-entrypoint-initdb.d:ro
+      # Initial MySQL accounts are provisioned after startup by scripts/setup-mysql-exporter.sh
     networks: [database]
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$$MYSQL_ROOT_PASSWORD\" --silent"]
