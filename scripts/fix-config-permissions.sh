@@ -42,6 +42,11 @@ echo 'Public read-only configs are now readable by non-root containers.'
 stat -c '%a %n' prometheus/prometheus.yml loki/config.yml promtail/config.yml
 echo 'The .env file remains private (0600) and all data volumes are unchanged.'
 
+if [[ "${1:-}" == "--permissions-only" ]]; then
+  echo 'CONFIG_PERMISSIONS_PREPARED'
+  exit 0
+fi
+
 echo 'Restarting ONLY the NEW Compose lab services using these public configs...'
 for svc in prometheus loki grafana promtail nginx; do
   id="$(sudo docker compose ps -a -q "$svc" 2>/dev/null || true)"
