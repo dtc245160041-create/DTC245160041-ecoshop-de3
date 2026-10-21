@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+*.sql
+*.sql.gz
+*.tgz
+*.tar
+*.bak
+*.log
+*.key
+*.pem
+*.crt
+.DS_Store
+__pycache__/
+.vscode/
+private-backups/
