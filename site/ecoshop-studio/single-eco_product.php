@@ -30,8 +30,9 @@ if (!$image) $image=eco_demo_img($art ?: 'lamp');
           <?php the_content(); ?>
         </div>
       <?php endif; ?>
-      <p class="notice-info">* Giá và sản phẩm được tạo để minh họa, không có chức năng thanh toán hoặc đặt hàng thật.</p>
-      <a class="btn btn-primary" href="<?php echo esc_url(eco_demo_navigation('lien-he')); ?>">Liên hệ tư vấn demo ↗</a>
+      <p class="notice-info">* Giá chỉ mang tính minh họa. Giỏ hàng và thanh toán khi nhận hàng đều là bản thử nghiệm, không thu tiền hoặc giao hàng thật.</p>
+      <div class="eco-detail-action"><?php eco_cart_add_button($id, 'Thêm vào giỏ hàng'); ?></div>
+      <a class="eco-back-link" href="<?php echo esc_url(eco_cart_url()); ?>">Xem giỏ hàng →</a>
       <a style="margin-left:15px;color:#26674c;font-weight:700;font-size:13px" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">← Quay lại bộ sưu tập</a>
     </div>
   </div>
