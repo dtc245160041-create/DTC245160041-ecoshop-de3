@@ -55,7 +55,9 @@ sudo docker run --rm --network none --pull never \
 
 echo "THEME_BACKUP_CREATED: private-backups/$backup_name"
 # No database operations or container restarts are involved.
-html="$(curl -fsS --max-time 20 http://127.0.0.1:18080/)"
+# Use the public canonical WordPress Host while connecting over loopback.
+# Otherwise WordPress may return a redirect body and cause a false-negative.
+html="$(curl -fsS --max-time 20 -H 'Host: 192.168.254.128:18080' http://127.0.0.1:18080/)"
 if [[ "$html" == *"Đồ dùng tiện ích"* ]]; then
   echo 'DESIGN_UPDATE_OK'
 else
