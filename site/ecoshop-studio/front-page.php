@@ -4,21 +4,21 @@ get_header(); ?>
 <section class="hero">
   <div class="container hero-grid">
     <div>
-      <span class="kicker"><span class="pulse"></span> Đồ dùng tinh tế · Cuộc sống xanh</span>
-      <h1>Những điều nhỏ,<br><em>trải nghiệm lớn.</em></h1>
-      <p class="hero-lead">EcoShop chọn lọc các sản phẩm hiện đại, tiện ích và đẹp mắt để biến những khoảnh khắc thường ngày trở nên dễ chịu hơn.</p>
+      <span class="kicker"><span class="pulse"></span> Sản phẩm tiện ích cho sinh hoạt và làm việc</span>
+      <h1>Đồ dùng tiện ích.<br><em>Dễ chọn, dễ dùng.</em></h1>
+      <p class="hero-lead">Khám phá các mẫu đồ dùng cho học tập, làm việc và sinh hoạt hằng ngày. Thông tin ngắn gọn, giá tham khảo rõ ràng và dễ tìm kiếm.</p>
       <div class="hero-buttons">
-        <a class="btn btn-primary" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Khám phá bộ sưu tập <span aria-hidden="true">↗</span></a>
-        <a class="btn btn-ghost" href="<?php echo esc_url(eco_demo_navigation('gioi-thieu')); ?>">Về EcoShop →</a>
+        <a class="btn btn-primary" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Xem sản phẩm <span aria-hidden="true">↗</span></a>
+        <a class="btn btn-ghost" href="<?php echo esc_url(eco_demo_navigation('gioi-thieu')); ?>">Giới thiệu cửa hàng →</a>
       </div>
-      <div class="hero-proof"><span><strong>06</strong> sản phẩm demo</span><i aria-hidden="true"></i><span><strong>03</strong> nhóm sản phẩm</span><i aria-hidden="true"></i><span>Giao diện <strong>responsive</strong></span></div>
+      <div class="hero-proof"><span><strong>6</strong> sản phẩm mẫu</span><i aria-hidden="true"></i><span><strong>3</strong> danh mục</span><i aria-hidden="true"></i><span>Thông tin <strong>dễ tra cứu</strong></span></div>
     </div>
     <div class="hero-art" aria-label="Minh họa sản phẩm EcoShop">
-      <span class="hero-art-title">A space to feel good.</span>
+      <span class="hero-art-title">Đèn bàn LED Aura</span>
       <div class="hero-orbit" aria-hidden="true"></div>
       <img class="hero-feature" src="<?php echo esc_url(eco_demo_img('lamp')); ?>" alt="Đèn bàn LED Aura">
-      <div class="float-pill left"><span class="stars" aria-hidden="true">★★★★★</span><br>Sự tiện lợi trong từng chi tiết<small>Thiết kế cho cuộc sống hằng ngày</small></div>
-      <div class="float-pill right">🌿&nbsp; Eco picks<small>Gợi ý cho góc làm việc</small></div>
+      <div class="float-pill left">Góc học tập gọn gàng<small>Đèn bàn có 3 chế độ ánh sáng</small></div>
+      
     </div>
   </div>
 </section>
@@ -28,7 +28,7 @@ get_header(); ?>
   <div class="trust-item"><div class="trust-icon">♡</div><div><strong>Chọn lựa tinh tế</strong><small>Sản phẩm mẫu đa dạng nhu cầu</small></div></div>
 </div></section>
 <section class="section" id="featured"><div class="container">
-  <div class="section-head"><div><span class="eyebrow">Tuyển chọn cho bạn</span><h2>Sản phẩm nổi bật</h2><p class="section-intro">Từ góc làm việc đến những đồ dùng cá nhân, khám phá các sản phẩm mẫu của EcoShop.</p></div>
+  <div class="section-head"><div><span class="eyebrow">Tuyển chọn cho bạn</span><h2>Sản phẩm nổi bật</h2><p class="section-intro">Xem thông tin, giá tham khảo và đặc điểm của các sản phẩm đang giới thiệu.</p></div>
     <a class="text-link" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Xem tất cả sản phẩm ↗</a>
   </div>
   <div class="cards-grid">
@@ -38,13 +38,13 @@ get_header(); ?>
   </div>
 </div></section>
 <section class="section soft"><div class="container">
-  <div class="section-head"><div><span class="eyebrow">Tại sao là EcoShop?</span><h2>Ít phức tạp.<br>Nhiều cảm hứng.</h2><p class="section-intro">Một nơi để tìm kiếm các gợi ý đơn giản nhưng tạo nên khác biệt trong đời sống hằng ngày.</p></div></div>
+  <div class="section-head"><div><span class="eyebrow">Thông tin rõ ràng</span><h2>Mua sắm dễ tìm hiểu hơn.</h2><p class="section-intro">Danh mục được sắp xếp dễ hiểu, giúp bạn xem và so sánh sản phẩm thuận tiện hơn.</p></div></div>
   <div class="features">
-    <article class="feature"><div class="feature-icon">✨</div><h3>Thẩm mỹ tối giản</h3><p>Giao diện và sản phẩm hướng đến vẻ đẹp tinh tế, dễ phối hợp với nhiều phong cách.</p></article>
-    <article class="feature"><div class="feature-icon">☘️</div><h3>Hữu ích mỗi ngày</h3><p>Những món đồ gần gũi, phù hợp không gian học tập, làm việc và sinh hoạt.</p></article>
-    <article class="feature"><div class="feature-icon">💡</div><h3>Khám phá dễ dàng</h3><p>Danh mục rõ ràng, chi tiết trực quan và bộ lọc tìm kiếm nhanh trên mọi thiết bị.</p></article>
+    <article class="feature"><div class="feature-icon">01</div><h3>Thông tin đầy đủ</h3><p>Mỗi sản phẩm có hình minh họa, mức giá tham khảo và mô tả những đặc điểm cơ bản.</p></article>
+    <article class="feature"><div class="feature-icon">02</div><h3>Danh mục dễ tìm</h3><p>Lọc theo nhóm công nghệ, góc làm việc hoặc đồ dùng đời sống.</p></article>
+    <article class="feature"><div class="feature-icon">03</div><h3>Sử dụng thuận tiện</h3><p>Xem trang web bằng điện thoại hoặc máy tính, không cần đăng ký tài khoản.</p></article>
   </div>
 </div></section>
-<div class="container cta-wrap"><div class="cta"><div><span class="eyebrow" style="color:#a7dcc0">Đến lúc làm mới góc của bạn</span><h2>Bắt đầu từ một lựa chọn nhỏ.</h2><p>Khám phá trọn bộ sản phẩm demo EcoShop ngay hôm nay.</p></div>
+<div class="container cta-wrap"><div class="cta"><div><span class="eyebrow" style="color:#a7dcc0">Bộ sưu tập EcoShop</span><h2>Tìm sản phẩm phù hợp với bạn.</h2><p>Xem chi tiết và mức giá tham khảo của toàn bộ sản phẩm mẫu.</p></div>
   <a class="btn" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Xem sản phẩm <span aria-hidden="true">↗</span></a></div></div>
 <?php get_footer(); ?>
