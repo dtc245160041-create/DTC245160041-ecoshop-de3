@@ -25,3 +25,19 @@ jobs:
           for f in scripts/*.sh db/init/*.sh; do bash -n "$f"; done
       - name: Verify JSON dashboard
         run: python3 -m json.tool grafana/dashboards/ecoshop-de3.json >/dev/null
+      - name: Validate EcoShop demo PHP syntax
+        run: |
+          command -v php >/dev/null || (sudo apt-get update && sudo apt-get install -y php-cli)
+          for f in site/ecoshop-studio/*.php scripts/apply-demo-site.php; do php -l "$f"; done
+      - name: Validate EcoShop demo JavaScript
+        run: node --check site/ecoshop-studio/assets/app.js
+      - name: Validate product illustrations as XML
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          import xml.etree.ElementTree as ET
+          assets=list(pathlib.Path('site/ecoshop-studio/assets').glob('*.svg'))
+          assert len(assets)==6, 'Expected 6 illustration files'
+          for f in assets: ET.parse(f)
+          print('ECO_STUDIO_ASSETS_OK',len(assets))
+          PY
