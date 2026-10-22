@@ -128,6 +128,13 @@ function eco_cart_handle_action() {
         eco_cart_redirect('removed');
     }
     if ($command==='update') {
+        // "Xóa" button submits the enclosing update form without nested forms.
+        $remove=isset($_POST['remove_product']) ? absint($_POST['remove_product']) : 0;
+        if ($remove && isset($cart[$remove])) {
+            unset($cart[$remove]);
+            eco_cart_save($cart);
+            eco_cart_redirect('removed');
+        }
         $quantities=isset($_POST['quantities']) && is_array($_POST['quantities'])
           ? wp_unslash($_POST['quantities']) : array();
         foreach ($cart as $id=>$oldqty) {
@@ -281,6 +288,7 @@ function eco_cart_render_page() {
                 <div><h3><a href="<?php echo esc_url($row['url']); ?>"><?php echo esc_html($row['title']); ?></a></h3>
                   <p><?php echo esc_html(eco_demo_money($row['price'])); ?>/sản phẩm</p>
                   <label>Số lượng <input type="number" name="quantities[<?php echo esc_attr($row['id']); ?>]" value="<?php echo esc_attr($row['quantity']); ?>" min="0" max="20" step="1"></label>
+                  <button class="eco-remove-btn" type="submit" name="remove_product" value="<?php echo esc_attr($row['id']); ?>">Xóa khỏi giỏ</button>
                 </div>
                 <strong><?php echo esc_html(eco_demo_money($row['subtotal'])); ?></strong>
               </div>
