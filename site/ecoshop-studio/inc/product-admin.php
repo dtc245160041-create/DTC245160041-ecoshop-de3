@@ -120,14 +120,15 @@ add_action('save_post_eco_product', function ($post_id, $post, $update) {
         if (in_array($value, $arts, true)) update_post_meta($post_id, 'eco_art', $value);
     }
     if (isset($_POST['eco_tag']) && is_scalar($_POST['eco_tag'])) {
-        update_post_meta($post_id, 'eco_tag', mb_substr(sanitize_text_field(wp_unslash($_POST['eco_tag'])), 0, 35));
+        $tag = sanitize_text_field(wp_unslash($_POST['eco_tag']));
+        update_post_meta($post_id, 'eco_tag', wp_html_excerpt($tag, 35));
     }
     if (isset($_POST['eco_features']) && is_scalar($_POST['eco_features'])) {
         $lines = preg_split('/\r\n|\r|\n/', sanitize_textarea_field(wp_unslash($_POST['eco_features'])));
         $features = array();
         foreach ($lines as $line) {
             $line = trim($line);
-            if ($line !== '') $features[] = substr($line, 0, 150);
+            if ($line !== '') $features[] = wp_html_excerpt($line, 150);
             if (count($features) >= 6) break;
         }
         update_post_meta($post_id, 'eco_features', $features);
