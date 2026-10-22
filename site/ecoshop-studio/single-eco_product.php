@@ -1,0 +1,31 @@
+<?php
+defined('ABSPATH') || exit;
+get_header();
+while (have_posts()) : the_post();
+$id=get_the_ID();
+$price=(int)get_post_meta($id,'eco_price',true);
+$old=(int)get_post_meta($id,'eco_old_price',true);
+$art=get_post_meta($id,'eco_art',true);
+$category=get_post_meta($id,'eco_category',true);
+$features=get_post_meta($id,'eco_features',true);
+?>
+<section class="detail"><div class="container">
+  <div class="breadcrumbs"><a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ</a> / <a href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Sản phẩm</a> / <?php the_title(); ?></div>
+  <div class="detail-grid">
+    <div class="detail-art"><img src="<?php echo esc_url(eco_demo_img($art)); ?>" alt="<?php echo esc_attr(get_the_title()); ?>"></div>
+    <div class="detail-copy">
+      <span class="kicker"><span class="pulse"></span> <?php echo esc_html($category); ?></span>
+      <h1 class="page-title"><?php the_title(); ?></h1>
+      <p class="detail-desc"><?php echo esc_html(get_the_excerpt()); ?></p>
+      <div class="detail-price"><?php echo esc_html(eco_demo_money($price)); ?><?php if($old): ?><del><?php echo esc_html(eco_demo_money($old)); ?></del><?php endif; ?></div>
+      <h3 style="margin:25px 0 0">Điểm nổi bật</h3>
+      <ul class="check-list">
+        <?php if(is_array($features)): foreach($features as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; endif; ?>
+      </ul>
+      <p class="notice-info">* Giá và sản phẩm được tạo để minh họa, không có chức năng thanh toán hoặc đặt hàng thật.</p>
+      <a class="btn btn-primary" href="<?php echo esc_url(eco_demo_navigation('lien-he')); ?>">Liên hệ tư vấn demo ↗</a>
+      <a style="margin-left:15px;color:#26674c;font-weight:700;font-size:13px" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">← Quay lại bộ sưu tập</a>
+    </div>
+  </div>
+</div></section>
+<?php endwhile; get_footer(); ?>
