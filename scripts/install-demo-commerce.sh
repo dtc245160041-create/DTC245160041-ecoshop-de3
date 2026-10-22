@@ -44,6 +44,8 @@ bash scripts/update-ecoshop-design.sh
 echo 'Creating/reusing only 3 cart/checkout pages in NEW WordPress lab...'
 sudo docker compose exec -T wordpress php < scripts/enable-demo-commerce.php
 
+echo 'Verifying cart backend functions, order type and published demo pages...'
+sudo docker compose exec -T wordpress php < scripts/check-demo-commerce.php
 echo 'Checking shopping pages through Nginx with WordPress canonical Host...'
 for page in gio-hang thanh-toan dat-hang-thanh-cong; do
   status="$(curl -sS --max-time 18 -H 'Host: 192.168.254.128:18080' \
