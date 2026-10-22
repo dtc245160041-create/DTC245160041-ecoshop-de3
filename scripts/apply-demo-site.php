@@ -21,6 +21,16 @@ if (!function_exists('eco_demo_seed_products')) {
     // The products function is defined in our theme. Load it before switching.
     require_once get_theme_root() . '/ecoshop-studio/functions.php';
 }
+// WordPress has already executed init while bootstrapping its OLD active theme.
+// Register our CPT explicitly for THIS CLI process before creating demo products.
+if (!post_type_exists('eco_product')) {
+    register_post_type('eco_product', array(
+        'label'=>'Sản phẩm EcoShop',
+        'public'=>true, 'show_in_rest'=>true,
+        'rewrite'=>array('slug'=>'chi-tiet-san-pham'),
+        'supports'=>array('title','editor','excerpt','thumbnail')
+    ));
+}
 $existing_theme = get_option('stylesheet');
 echo 'PREVIOUS_THEME: ' . $existing_theme . PHP_EOL;
 
