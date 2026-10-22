@@ -10,6 +10,8 @@
       <div><h3 class="footer-heading">Khám phá</h3><div class="footer-links">
         <a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ</a>
         <a href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Sản phẩm</a>
+        <a href="<?php echo esc_url(eco_cart_url()); ?>">Giỏ hàng</a>
+        <a href="<?php echo esc_url(eco_cart_url('thanh-toan')); ?>">Thanh toán demo</a>
         <a href="<?php echo esc_url(eco_demo_navigation('gioi-thieu')); ?>">Giới thiệu</a>
         <a href="<?php echo esc_url(eco_demo_navigation('lien-he')); ?>">Liên hệ</a>
       </div></div>
