@@ -7,7 +7,7 @@
 </head>
 <body <?php body_class(); ?>><?php wp_body_open(); ?>
 <a class="skip" href="#main">Đi tới nội dung</a>
-<div class="top-strip">ECOSHOP STUDIO · SẢN PHẨM HỮU ÍCH CHO NGÀY MỚI</div>
+<div class="top-strip">EcoShop – Website giới thiệu sản phẩm</div>
 <header class="site-header">
   <div class="container header-inner">
     <a class="logo" href="<?php echo esc_url(home_url('/')); ?>" aria-label="EcoShop - Trang chủ">
