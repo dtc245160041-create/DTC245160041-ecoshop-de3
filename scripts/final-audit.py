@@ -195,8 +195,10 @@ if net:
     def loki_http(uri):
         return command(['sudo','docker','run','--rm','--pull','never',
                         '--network',net,'busybox:1.36','wget','-qO-','-T','18',uri],timeout=40)
-    rc,res,err=loki_http('http://loki:3100/ready')
-    check('LOKI','Loki ready',rc==0 and res.strip()=='ready',err[-100:] if rc else res.strip()[:50])
+    # Readiness can return HTTP 503 briefly when ingester ring is warming up.
+    # Run actual LogQL checks first, then retry readiness; never claim readiness
+    # passed merely because queries passed.
+    print('Checking LogQL first; will independently retry Loki /ready afterwards...')
     print('Waiting 12 seconds for Promtail to ship Nginx access logs...')
     time.sleep(12)
     now=int(time.time())
@@ -222,8 +224,27 @@ if net:
         check('LOKI',label,valid,note)
         results.append(label+' | '+query+' | '+('PASS' if valid else 'FAIL')+' | '+note)
     (OUT/'logql-query-results.txt').write_text('\n'.join(results)+'\n',encoding='utf-8')
+    ready=False
+    ready_notes=[]
+    for attempt in range(1, 6):
+        if attempt > 1:
+            time.sleep(5)
+        rc,response,error=loki_http('http://loki:3100/ready')
+        ready=rc==0 and response.strip()=='ready'
+        ready_notes.append('attempt {}: {}'.format(attempt,
+          '200 ready' if ready else ('unavailable: '+(error.strip()[-90:] or response.strip()[:90]))))
+        if ready:
+            break
+    (OUT/'loki-readiness.txt').write_text('\n'.join(ready_notes)+'\n',encoding='utf-8')
+    check('LOKI','Loki /ready (independent health check)',ready,
+          ' | '.join(ready_notes[-2:]))
+    if not ready:
+        print('LOKI_READINESS_503: Query API worked, but readiness still failed after retries.')
+        print('Run: sudo docker compose logs --tail=60 loki')
+        print('Do not delete volumes or restart Loki blindly.')
 else:
     check('LOKI','Three live LogQL queries',False,'Cannot query without internal monitoring network')
+    check('LOKI','Loki /ready (independent health check)',False,'No monitoring network')
 check('LOKI','Three Grafana Explore screenshots collected',False,
       'Use saved Q1-Q3 queries with time range Last 15 minutes.',review=True)
 check('REPORT','Student cover data and manual screenshots finalized',False,
