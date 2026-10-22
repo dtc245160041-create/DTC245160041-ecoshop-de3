@@ -28,7 +28,12 @@ jobs:
       - name: Validate EcoShop demo PHP syntax
         run: |
           command -v php >/dev/null || (sudo apt-get update && sudo apt-get install -y php-cli)
-          for f in site/ecoshop-studio/*.php site/ecoshop-studio/inc/*.php scripts/apply-demo-site.php; do php -l "$f"; done
+          for f in site/ecoshop-studio/*.php site/ecoshop-studio/inc/*.php scripts/apply-demo-site.php scripts/enable-demo-commerce.php; do php -l "$f"; done
+      - name: Guard demo-only checkout and isolated deployment
+        run: |
+          grep -q "Thanh toán khi nhận hàng (mô phỏng)" site/ecoshop-studio/inc/cart-checkout.php
+          grep -q "REFUSING_NON_LAB_VOLUMES" scripts/install-demo-commerce.sh
+          grep -q "MYSQL_LAB_BACKUP_OK" scripts/install-demo-commerce.sh
       - name: Validate EcoShop demo JavaScript
         run: node --check site/ecoshop-studio/assets/app.js
       - name: Validate product illustrations as XML
