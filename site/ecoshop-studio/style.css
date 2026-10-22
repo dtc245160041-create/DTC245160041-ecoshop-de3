@@ -383,3 +383,6 @@ body {
 .eco-checkout-form .eco-confirm input{margin-top:4px}
 .eco-honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 @media(max-width:850px){.eco-cart-layout{grid-template-columns:1fr}.eco-cart-row{grid-template-columns:76px minmax(0,1fr);gap:13px}.eco-cart-row img{width:76px;height:76px}.eco-cart-row>strong{grid-column:2}.eco-cart-panel{padding:19px}}
+
+.eco-remove-btn{display:inline-block;color:#a03f39;background:none;border:0;padding:5px 0;font-size:13px;cursor:pointer;margin-top:8px;text-decoration:underline}
+.eco-remove-btn:hover{color:#702520}
