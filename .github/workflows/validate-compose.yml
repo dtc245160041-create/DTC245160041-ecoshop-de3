@@ -28,7 +28,7 @@ jobs:
       - name: Validate EcoShop demo PHP syntax
         run: |
           command -v php >/dev/null || (sudo apt-get update && sudo apt-get install -y php-cli)
-          for f in site/ecoshop-studio/*.php scripts/apply-demo-site.php; do php -l "$f"; done
+          for f in site/ecoshop-studio/*.php site/ecoshop-studio/inc/*.php scripts/apply-demo-site.php; do php -l "$f"; done
       - name: Validate EcoShop demo JavaScript
         run: node --check site/ecoshop-studio/assets/app.js
       - name: Validate product illustrations as XML
