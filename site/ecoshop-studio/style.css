@@ -3,7 +3,7 @@ Theme Name: EcoShop Studio
 Theme URI: https://github.com/dtc245160041-create/DTC245160041-ecoshop-de3
 Author: EcoShop Lab
 Description: Giao diện quảng bá sản phẩm hoàn chỉnh, tối ưu mobile và demo WordPress Docker Compose Đề 3.
-Version: 1.0.0
+Version: 1.1.0
 Requires PHP: 7.4
 Text Domain: ecoshop-studio
 */
@@ -154,3 +154,189 @@ h1,h2,h3,p{margin-top:0}
 @media(max-width:1020px){.hero-grid{gap:20px}.hero h1{font-size:48px}.hero-art{height:380px}.hero-feature{top:80px}.cards-grid{gap:16px}.product-art{height:200px}}
 @media(max-width:760px){.container{padding:0 18px}.header-inner{height:66px;gap:12px}.logo{font-size:22px}.navigation{display:none;position:absolute;top:100%;left:0;right:0;padding:16px 22px;background:#fff;box-shadow:0 14px 25px #153f2410;flex-direction:column;align-items:flex-start}.navigation.is-open{display:flex}.mobile-menu-btn{display:block;order:3}.header-action{display:none}.hero{padding:40px 0}.hero-grid{grid-template-columns:1fr}.hero h1{font-size:45px}.hero-art{height:335px}.hero-feature{top:48px;height:240px}.trust-grid{grid-template-columns:1fr}.trust-item{justify-content:flex-start;padding:16px 8px}.trust-item+.trust-item{border-left:0;border-top:1px solid var(--line)}.section{padding:64px 0}.section-head{align-items:start;flex-direction:column}.cards-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.features{grid-template-columns:1fr}.copy-grid,.contact-layout,.detail-grid{grid-template-columns:1fr}.detail-art{min-height:330px}.cta{padding:32px;flex-direction:column;align-items:start}.cta h2{font-size:27px}.footer-grid{grid-template-columns:1fr 1fr}.footer-grid>*:first-child{grid-column:1/-1}.product-art{height:205px}}
 @media(max-width:520px){.hero h1{font-size:39px}.hero-lead{font-size:14px}.cards-grid{grid-template-columns:1fr}.product-art{height:270px}.product-information h3{font-size:19px}.filters{align-items:stretch}.search-wrap{width:100%}.filter-tabs{gap:6px}.filter-btn{padding:8px 12px;font-size:11px}.footer-grid{gap:32px}.footer-bottom{flex-direction:column}.stats{flex-wrap:wrap}.stat{min-width:125px}}
+
+
+/* ===========================================================
+   EcoShop Studio 1.1 – clearer Vietnamese storefront typography
+   Simple retail design: readable size, normal weight, less decoration.
+   No external fonts, cookies, trackers or network dependencies.
+   =========================================================== */
+:root {
+  --ink: #202b26;
+  --muted: #53645a;
+  --brand: #21583e;
+  --brand2: #2e6b4b;
+  --paper: #ffffff;
+  --line: #e1e6e1;
+  --round: 12px;
+}
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Segoe UI", Arial, Tahoma, sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.container { max-width: 1180px; }
+.top-strip {
+  height: 32px;
+  background: #204c37;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.site-header { background: #fff; border-bottom: 1px solid var(--line); backdrop-filter: none; }
+.header-inner { height: 76px; }
+.logo { font-size: 24px; font-weight: 750; letter-spacing: -.02em; }
+.logo span.logo-word { letter-spacing: -.02em; }
+.logo-mark { border-radius: 8px; font-size: 25px; font-weight: 700; box-shadow: none; }
+.navigation a { font-size: 15px; font-weight: 600; color: #394b41; }
+.header-action { font-size: 14px; font-weight: 650; border-radius: 8px; padding: 10px 16px; }
+.kicker, .eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  text-transform: none;
+}
+.kicker { background: #f0f5f0; border-radius: 7px; padding: 7px 11px; }
+.hero { padding: 48px 0 60px; }
+.hero-grid { gap: 54px; min-height: 425px; }
+.hero h1 {
+  font-size: clamp(37px, 4.5vw, 54px);
+  line-height: 1.22;
+  letter-spacing: -.035em;
+  font-weight: 750;
+  margin: 18px 0 20px;
+}
+.hero-lead { font-size: 17px; line-height: 1.75; color: #4f6256; margin-bottom: 25px; }
+.hero-art {
+  height: 425px;
+  border-radius: 14px;
+  background: #edf3ee;
+  box-shadow: inset 0 0 0 1px #e1e8e1;
+}
+.hero-art::before, .hero-art::after, .hero-orbit { display: none; }
+.hero-art-title { top: 28px; left: 30px; font-size: 13px; letter-spacing: 0; text-transform: none; font-weight: 650; }
+.hero-feature { top: 71px; left: 17%; width: 66%; height: 280px; filter: none; transform: none; }
+.float-pill {
+  padding: 12px 15px;
+  font-size: 13px;
+  font-weight: 650;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  box-shadow: 0 3px 13px #214b3715;
+  backdrop-filter: none;
+}
+.float-pill small { font-size: 12px; color: #5d6d62; font-weight: 400; }
+.float-pill.left { bottom: 22px; left: 22px; }
+.float-pill.right { display: none; }
+.btn {
+  padding: 12px 19px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 650;
+}
+.btn-primary { box-shadow: none; }
+.hero-proof { margin-top: 25px; font-size: 13px; color: #596a60; }
+.trust-item { padding: 20px 16px; }
+.trust-item strong { font-size: 15px; font-weight: 700; }
+.trust-item small { font-size: 13px; color: #677c6d; }
+.trust-icon { border-radius: 8px; }
+.section { padding: 70px 0; }
+.section h2, .page-title {
+  font-size: clamp(30px, 3.25vw, 40px);
+  line-height: 1.24;
+  letter-spacing: -.025em;
+  font-weight: 750;
+}
+.section-intro { font-size: 16px; line-height: 1.75; color: #58695e; }
+.text-link { font-size: 15px; font-weight: 650; }
+.cards-grid { gap: 20px; }
+.product-card {
+  border-radius: 12px;
+  border: 1px solid #e5e8e5;
+  box-shadow: none;
+  transition: box-shadow .2s ease;
+}
+.product-card:hover { transform: none; box-shadow: 0 6px 20px #214b3713; }
+.product-art { height: 228px; background: #f0f3f0; }
+.product-art::before { display: none; }
+.product-art img { padding: 25px; transition: transform .2s ease; }
+.product-tag {
+  top: 13px;
+  left: 13px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 650;
+  border: 1px solid #dbe5dc;
+  border-radius: 6px;
+  box-shadow: none;
+}
+.product-information { padding: 19px 20px 21px; }
+.product-information h3 { font-size: 19px; font-weight: 700; letter-spacing: -.015em; }
+.product-information p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #53645a;
+  min-height: 43px;
+  margin-bottom: 16px;
+}
+.product-bottom strong { font-size: 19px; font-weight: 750; letter-spacing: -.02em; }
+.product-bottom del { font-size: 13px; color: #7c887f; }
+.round-link { width: 37px; height: 37px; border-radius: 8px; }
+.section.soft { background: #f6f8f6; }
+.feature { border-radius: 12px; padding: 25px; }
+.feature-icon { border-radius: 8px; height: 44px; width: 44px; font-size: 19px; }
+.feature h3 { font-size: 18px; letter-spacing: -.01em; }
+.feature p { font-size: 15px; line-height: 1.7; color: #596a60; }
+.cta { border-radius: 14px; padding: 37px 42px; }
+.cta::after { display: none; }
+.cta h2 { font-size: 29px; letter-spacing: -.02em; font-weight: 750; }
+.cta p { font-size: 15px; color: #d8e8dc; }
+.page-hero { padding: 62px 0 45px; background: #f6f8f5; }
+.page-hero p { font-size: 16px; color: #53645a; }
+.breadcrumbs { font-size: 13px; color: #67776c; }
+.filter-btn { border-radius: 7px; padding: 9px 15px; font-size: 14px; font-weight: 600; }
+.search-wrap { border-radius: 8px; }
+.search-wrap input { font-size: 14px; }
+.copy-card, .contact-visual, .contact-form, .detail-art { border-radius: 14px; }
+.copy-card h2, .contact-visual h2 { letter-spacing: -.02em; }
+.copy-grid p, .article-copy p { font-size: 16px; line-height: 1.8; }
+.stat { border-radius: 8px; }
+.stat small, .tech-chips span, .contact-bullet { font-size: 13px; }
+.contact-form label { font-size: 14px; }
+.contact-form input:not([type="hidden"]), .contact-form textarea { font-size: 15px; border-radius: 8px; }
+.notice, .notice-info { font-size: 14px; }
+.detail-desc { font-size: 17px; line-height: 1.7; }
+.detail-price { letter-spacing: -.02em; }
+.check-list li { font-size: 15px; }
+.footer-copy, .footer-links a, .footer-links span { font-size: 13px; }
+.footer-heading { font-size: 15px; }
+.footer-bottom { font-size: 12px; }
+
+@media (max-width: 760px) {
+  .header-inner { height: 66px; }
+  .hero { padding: 34px 0 45px; }
+  .hero-grid { gap: 26px; }
+  .hero h1 { font-size: clamp(34px, 8vw, 42px); line-height: 1.22; }
+  .hero-lead { font-size: 16px; }
+  .hero-art { height: 320px; }
+  .hero-feature { top: 45px; height: 232px; }
+  .section { padding: 53px 0; }
+  .section h2, .page-title { font-size: clamp(28px, 6vw, 34px); }
+  .product-art { height: 215px; }
+  .cta { padding: 28px; }
+}
+@media (max-width: 520px) {
+  .product-art { height: 254px; }
+  .hero-proof { gap: 10px; flex-wrap: wrap; }
+  .hero-art-title { top: 17px; left: 17px; }
+  .float-pill { font-size: 12px; }
+  .float-pill small { font-size: 11px; }
+  .footer-links a, .footer-links span { font-size: 13px; }
+}
