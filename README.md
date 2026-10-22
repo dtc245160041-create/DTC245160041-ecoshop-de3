@@ -59,8 +59,9 @@ Các volume gốc cần giữ nguyên: `wordpress_db_data`, `wordpress_wp_data`,
 Bản SQL cũ (trên VM): `/home/hoc/ecoshop-wordpress-recovered.sql`. Không commit SQL backup hoặc `.env`.
 
 ```bash
-bash scripts/precheck-restore.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_up_data
-bash scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_up_data
+# Sao lưu MariaDB cu co collation utf8mb4_uca1400_ai_ci KHONG ho tro tren MySQL8.
+# Chi su dung script tao BAN SAO SQL chuyen doi, khong sua SQL goc:
+bash scripts/restore-mysql8-compatible.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_wp_data
 ```
 
 Script chỉ nhập vào volume mới `de3_mysql_data` khi schema còn trống, và chỉ sao chép WordPress vào `de3_wp_data` khi chưa có file. **Không** gắn trực tiếp volume MariaDB cũ vào MySQL 8. Nếu chuyển dữ liệu MariaDB → MySQL gặp lỗi collation/charset/SQL thì dừng, không xóa dữ liệu gốc.
@@ -130,3 +131,10 @@ bash scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_
 Sau import, script chỉ sửa `home`/`siteurl` trong **MySQL lab**, không đổi SQL nguồn hoặc MariaDB cũ. Nếu tên volume gốc khác, kiểm tra `sudo docker volume ls` và chọn volume chứa `wp-content`.
 
 **Báo cáo thực hành:** `docs/acceptance-checklist.md` mô tả chính xác ảnh minh chứng cần chụp; báo cáo DOCX 15 trang được bàn giao riêng. Lịch sử có ít nhất ba commit theo rubric và một số commit tăng cường chất lượng.
+
+
+## 9. Lỗi khôi phục MariaDB → MySQL8 `Unknown collation utf8mb4_uca1400_ai_ci`
+
+MySQL 8.0 không hỗ trợ collation UCA1400 của MariaDB. Lệnh `restore-mysql8-compatible.sh` sẽ **kiểm tra database lab hoàn toàn rỗng** rồi tạo file SQL mới trong `$HOME`, có quyền 0600 và thay `utf8mb4_uca1400_ai_ci` bằng `utf8mb4_unicode_ci`. File SQL gốc, database cũ và mọi Docker volume không bị xóa. Collation thay thế có quy tắc so sánh khác; hãy kiểm chứng nội dung bài viết/tài khoản sau khi khôi phục.
+
+Nếu trước đó đã import một phần, script sẽ in `STOP_PARTIAL_IMPORT` và **không** xóa các bảng. Khi đó kiểm tra danh sách bảng rồi lên kế hoạch khôi phục trong một schema thử nghiệm khác. Không chạy lại `restore-lab.sh` với file SQL cũ và không nhấn Install WordPress khi vẫn ở trang Welcome.
