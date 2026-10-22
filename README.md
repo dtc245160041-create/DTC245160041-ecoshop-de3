@@ -37,8 +37,7 @@ git clone https://github.com/dtc245160041-create/DTC245160041-ecoshop-de3.git
 cd DTC245160041-ecoshop-de3
 bash scripts/init-env.sh
 sudo docker compose config -q
-sudo docker compose pull
-sudo docker compose up -d
+bash scripts/deploy-lab.sh
 sudo docker compose ps
 ```
 
@@ -53,12 +52,15 @@ Sau đó dùng `http://localhost:18081` cho phpMyAdmin, `http://localhost:13000`
 
 ## 4. Khôi phục **bản sao** nội dung EcoShop cũ
 
+Nếu cổng 18080 hiện trang **Welcome / Install WordPress** nghĩa là MySQL lab chưa có bảng nội dung cũ. **Không nhấn Install WordPress.** Đầu tiên kiểm tra read-only, rồi khôi phục bản SQL và wp-content trong các volume lab `de3_*`. Nếu volume nguồn thực tế khác `wordpress_up_data`, xác nhận bằng `sudo docker volume ls` trước khi chạy. Không nhập dữ liệu lại khi schema đã có bảng.
+
 Các volume gốc cần giữ nguyên: `wordpress_db_data`, `wordpress_wp_data`, `ecoshop-db-recovery-test`, `ecoshop-db-restored`, `ecoshop-wp-restored`, `grafana-storage`, `ecoshop-loki-data`.
 
 Bản SQL cũ (trên VM): `/home/hoc/ecoshop-wordpress-recovered.sql`. Không commit SQL backup hoặc `.env`.
 
 ```bash
-bash scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql ecoshop-wp-restored
+bash scripts/precheck-restore.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_up_data
+bash scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_up_data
 ```
 
 Script chỉ nhập vào volume mới `de3_mysql_data` khi schema còn trống, và chỉ sao chép WordPress vào `de3_wp_data` khi chưa có file. **Không** gắn trực tiếp volume MariaDB cũ vào MySQL 8. Nếu chuyển dữ liệu MariaDB → MySQL gặp lỗi collation/charset/SQL thì dừng, không xóa dữ liệu gốc.
