@@ -41,3 +41,6 @@ jobs:
           for f in assets: ET.parse(f)
           print('ECO_STUDIO_ASSETS_OK',len(assets))
           PY
+
+      - name: Validate final-audit Python syntax (without running on CI host)
+        run: python3 -m py_compile scripts/final-audit.py
