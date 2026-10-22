@@ -23,6 +23,15 @@ if [[ -z "$id" || "$(sudo docker inspect -f '{{.State.Running}}' "$id" 2>/dev/nu
   exit 1
 fi
 
+echo 'Validating NEW theme PHP files with existing WordPress image before copying...'
+for file in functions.php header.php footer.php front-page.php page.php single-eco_product.php index.php inc/product-admin.php; do
+  sudo docker run --rm --network none --pull never \
+    --entrypoint php \
+    -v "$PWD/site/ecoshop-studio:/source:ro" \
+    wordpress:php8.3-apache -l "/source/$file" >/dev/null
+done
+echo 'THEME_PHP_LINT_OK'
+
 umask 077
 mkdir -p private-backups
 backup_name="ecoshop-theme-before-$(date +%Y%m%d-%H%M%S).tgz"
