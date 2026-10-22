@@ -20,7 +20,7 @@ n="$(sudo docker compose exec -T mysql sh -c 'mysql -N -uroot -p"$MYSQL_ROOT_PAS
 echo 'Importing SQL into ONLY de3_mysql_data ...'
 sudo docker compose exec -T mysql sh -c 'exec mysql -uroot -p"$MYSQL_ROOT_PASSWORD"' < "$sql"
 echo 'SQL import finished; verifying core WordPress tables...'
-tablecheck="$(sudo docker compose exec -T mysql sh -c 'mysql -N -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema=DATABASE() AND table_name IN (\x27wp_options\x27,\x27wp_posts\x27,\x27wp_users\x27)"' | tr -d '[:space:]')"
+tablecheck="$(sudo docker compose exec -T mysql sh -c 'mysql -N -uroot -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" -e "SHOW TABLES"' | awk '/^wp_(options|posts|users)$/ {n++} END {print n+0}')"
 if [[ "$tablecheck" != "3" ]]; then
   echo "STOP: expected 3 core WordPress tables, found $tablecheck. Old database unchanged." >&2
   exit 1
