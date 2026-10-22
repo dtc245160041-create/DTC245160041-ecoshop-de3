@@ -4,6 +4,11 @@
  * This code runs only in the NEW WordPress Compose lab when activated.
  */
 defined('ABSPATH') || exit;
+// Product management uses the native WordPress editor, Media Library and Trash.
+if (is_admin()) {
+    require_once get_template_directory() . '/inc/product-admin.php';
+}
+
 
 add_action('after_setup_theme', function () {
     add_theme_support('title-tag');
@@ -11,8 +16,8 @@ add_action('after_setup_theme', function () {
     add_theme_support('html5', array('search-form', 'gallery', 'caption', 'style', 'script'));
 });
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('ecoshop-studio', get_stylesheet_uri(), array(), '1.1.0');
-    wp_enqueue_script('ecoshop-studio', get_template_directory_uri() . '/assets/app.js', array(), '1.1.0', true);
+    wp_enqueue_style('ecoshop-studio', get_stylesheet_uri(), array(), '1.2.0');
+    wp_enqueue_script('ecoshop-studio', get_template_directory_uri() . '/assets/app.js', array(), '1.2.0', true);
 });
 
 add_action('init', function () {
@@ -43,7 +48,12 @@ function eco_demo_seed_products() {
 function eco_demo_money($amount) { return number_format((int)$amount, 0, ',', '.') . '₫'; }
 function eco_demo_img($art) { return get_template_directory_uri() . '/assets/' . sanitize_file_name($art) . '.svg'; }
 function eco_demo_query($limit = -1) {
-    return new WP_Query(array('post_type'=>'eco_product','post_status'=>'publish','posts_per_page'=>$limit,'orderby'=>array('menu_order'=>'ASC','date'=>'ASC')));
+    return new WP_Query(array(
+        'post_type'=>'eco_product', 'post_status'=>'publish',
+        'posts_per_page'=>$limit,
+        // Homepage shows the newest published products; catalog shows all.
+        'orderby'=>$limit > 0 ? array('date'=>'DESC','ID'=>'DESC') : array('menu_order'=>'ASC','date'=>'ASC')
+    ));
 }
 function eco_demo_render_card($id) {
     $category = get_post_meta($id, 'eco_category', true);
@@ -52,11 +62,13 @@ function eco_demo_render_card($id) {
     $old = (int)get_post_meta($id, 'eco_old_price', true);
     $tag = get_post_meta($id, 'eco_tag', true);
     $excerpt = get_the_excerpt($id);
+    $image = get_the_post_thumbnail_url($id, 'large');
+    if (!$image) $image = eco_demo_img($art ?: 'lamp');
     ?>
     <article class="product-card" data-category="<?php echo esc_attr($category); ?>" data-name="<?php echo esc_attr(strtolower(get_the_title($id))); ?>">
       <a class="product-art art-<?php echo esc_attr($art); ?>" href="<?php echo esc_url(get_permalink($id)); ?>" aria-label="<?php echo esc_attr('Xem ' . get_the_title($id)); ?>">
         <?php if ($tag) : ?><span class="product-tag"><?php echo esc_html($tag); ?></span><?php endif; ?>
-        <img loading="lazy" src="<?php echo esc_url(eco_demo_img($art)); ?>" alt="<?php echo esc_attr(get_the_title($id)); ?>">
+        <img loading="lazy" src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr(get_the_title($id)); ?>">
       </a>
       <div class="product-information"><span class="eyebrow category-label"><?php echo esc_html($category); ?></span>
         <h3><a href="<?php echo esc_url(get_permalink($id)); ?>"><?php echo esc_html(get_the_title($id)); ?></a></h3>
