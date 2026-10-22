@@ -53,7 +53,7 @@ function eco_demo_render_card($id) {
     $tag = get_post_meta($id, 'eco_tag', true);
     $excerpt = get_the_excerpt($id);
     ?>
-    <article class="product-card" data-category="<?php echo esc_attr($category); ?>" data-name="<?php echo esc_attr(mb_strtolower(get_the_title($id))); ?>">
+    <article class="product-card" data-category="<?php echo esc_attr($category); ?>" data-name="<?php echo esc_attr(strtolower(get_the_title($id))); ?>">
       <a class="product-art art-<?php echo esc_attr($art); ?>" href="<?php echo esc_url(get_permalink($id)); ?>" aria-label="<?php echo esc_attr('Xem ' . get_the_title($id)); ?>">
         <?php if ($tag) : ?><span class="product-tag"><?php echo esc_html($tag); ?></span><?php endif; ?>
         <img loading="lazy" src="<?php echo esc_url(eco_demo_img($art)); ?>" alt="<?php echo esc_attr(get_the_title($id)); ?>">
