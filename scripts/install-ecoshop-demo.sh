@@ -80,7 +80,9 @@ echo 'Creating/reusing WordPress pages and sample products in NEW Compose lab...
 sudo docker compose exec -T wordpress php < scripts/apply-demo-site.php
 
 echo 'Checking the new home page through Nginx port 18080...'
-homepage_html="$(curl -fsS --max-time 20 http://127.0.0.1:18080/)"
+# WordPress canonical URL uses 192.168.254.128:18080; calling localhost without
+# a Host header may produce a redirect page rather than the actual homepage.
+homepage_html="$(curl -fsS --max-time 20 -H 'Host: 192.168.254.128:18080' http://127.0.0.1:18080/)"
 if [[ "$homepage_html" == *"Đồ dùng tiện ích"* ]]; then
   echo 'ECOSHOP_HOMEPAGE_VERIFIED'
 else
@@ -89,7 +91,7 @@ else
 fi
 echo 'Checking catalog, about and contact routes...'
 for slug in san-pham gioi-thieu lien-he; do
-  status="$(curl -L --max-time 15 -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:18080/$slug/" || true)"
+  status="$(curl --max-time 15 -sS -H 'Host: 192.168.254.128:18080' -o /dev/null -w '%{http_code}' "http://127.0.0.1:18080/$slug/" || true)"
   echo "PAGE_CHECK: /$slug/ HTTP $status"
   if [[ "$status" != "200" ]]; then
     echo "PAGE_ROUTE_WARNING: /$slug/ did not return 200. Check WordPress Permalinks and Nginx." >&2
