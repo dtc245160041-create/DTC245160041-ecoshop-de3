@@ -56,6 +56,23 @@ sudo docker run --rm --network none --pull never \
     chown -R 33:33 /target/wp-content/themes/ecoshop-studio
     find /target/wp-content/themes/ecoshop-studio -type d -exec chmod 755 {} \;
     find /target/wp-content/themes/ecoshop-studio -type f -exec chmod 644 {} \;
+    # Use standard WordPress rewrite rules for pretty product/page links, but
+    # never overwrite a previously customized .htaccess in this NEW lab volume.
+    if [ ! -e /target/.htaccess ]; then
+      cat > /target/.htaccess <<HTACCESS
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+HTACCESS
+      chown 33:33 /target/.htaccess
+      chmod 644 /target/.htaccess
+    fi
     echo THEME_FILES_INSTALLED
   '
 
