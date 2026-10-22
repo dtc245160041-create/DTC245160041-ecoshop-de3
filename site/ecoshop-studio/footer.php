@@ -4,8 +4,8 @@
     <div class="footer-grid">
       <div>
         <a class="logo" href="<?php echo esc_url(home_url('/')); ?>"><span class="logo-mark">e</span>eco<span class="logo-dot">shop.</span></a>
-        <p class="footer-copy">Đồ dùng tinh gọn, cảm hứng tích cực. EcoShop giới thiệu những lựa chọn thú vị dành cho học tập, công việc và cuộc sống hiện đại.</p>
-        <span class="eyebrow" style="color:#91d2ac">A little better, every day.</span>
+        <p class="footer-copy">EcoShop giới thiệu các sản phẩm mẫu dành cho học tập, làm việc và sinh hoạt hằng ngày.</p>
+        <span class="eyebrow" style="color:#91d2ac">Thông tin và giá mang tính minh họa.</span>
       </div>
       <div><h3 class="footer-heading">Khám phá</h3><div class="footer-links">
         <a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ</a>
