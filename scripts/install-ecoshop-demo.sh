@@ -87,5 +87,13 @@ else
   echo 'Theme script ran, but homepage text not verified. Check Nginx/WordPress logs.' >&2
   exit 1
 fi
+echo 'Checking catalog, about and contact routes...'
+for slug in san-pham gioi-thieu lien-he; do
+  status="$(curl -L --max-time 15 -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:18080/$slug/" || true)"
+  echo "PAGE_CHECK: /$slug/ HTTP $status"
+  if [[ "$status" != "200" ]]; then
+    echo "PAGE_ROUTE_WARNING: /$slug/ did not return 200. Check WordPress Permalinks and Nginx." >&2
+  fi
+done
 echo 'ECOSHOP_STUDIO_READY: http://192.168.254.128:18080'
 echo 'Original EcoShop containers and volumes were not modified.'
