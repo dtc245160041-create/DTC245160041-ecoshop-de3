@@ -8,11 +8,13 @@ $old=(int)get_post_meta($id,'eco_old_price',true);
 $art=get_post_meta($id,'eco_art',true);
 $category=get_post_meta($id,'eco_category',true);
 $features=get_post_meta($id,'eco_features',true);
+$image=get_the_post_thumbnail_url($id, 'large');
+if (!$image) $image=eco_demo_img($art ?: 'lamp');
 ?>
 <section class="detail"><div class="container">
   <div class="breadcrumbs"><a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ</a> / <a href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">Sản phẩm</a> / <?php the_title(); ?></div>
   <div class="detail-grid">
-    <div class="detail-art"><img src="<?php echo esc_url(eco_demo_img($art)); ?>" alt="<?php echo esc_attr(get_the_title()); ?>"></div>
+    <div class="detail-art"><img src="<?php echo esc_url($image); ?>" alt="<?php echo esc_attr(get_the_title()); ?>"></div>
     <div class="detail-copy">
       <span class="kicker"><span class="pulse"></span> <?php echo esc_html($category); ?></span>
       <h1 class="page-title"><?php the_title(); ?></h1>
@@ -22,6 +24,12 @@ $features=get_post_meta($id,'eco_features',true);
       <ul class="check-list">
         <?php if(is_array($features)): foreach($features as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; endif; ?>
       </ul>
+      <?php if (trim(get_the_content()) !== '') : ?>
+        <div class="detail-description">
+          <h3>Mô tả sản phẩm</h3>
+          <?php the_content(); ?>
+        </div>
+      <?php endif; ?>
       <p class="notice-info">* Giá và sản phẩm được tạo để minh họa, không có chức năng thanh toán hoặc đặt hàng thật.</p>
       <a class="btn btn-primary" href="<?php echo esc_url(eco_demo_navigation('lien-he')); ?>">Liên hệ tư vấn demo ↗</a>
       <a style="margin-left:15px;color:#26674c;font-weight:700;font-size:13px" href="<?php echo esc_url(eco_demo_navigation('san-pham')); ?>">← Quay lại bộ sưu tập</a>
