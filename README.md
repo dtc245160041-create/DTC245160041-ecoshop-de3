@@ -138,3 +138,17 @@ Sau import, script chỉ sửa `home`/`siteurl` trong **MySQL lab**, không đ�
 MySQL 8.0 không hỗ trợ collation UCA1400 của MariaDB. Lệnh `restore-mysql8-compatible.sh` sẽ **kiểm tra database lab hoàn toàn rỗng** rồi tạo file SQL mới trong `$HOME`, có quyền 0600 và thay `utf8mb4_uca1400_ai_ci` bằng `utf8mb4_unicode_ci`. File SQL gốc, database cũ và mọi Docker volume không bị xóa. Collation thay thế có quy tắc so sánh khác; hãy kiểm chứng nội dung bài viết/tài khoản sau khi khôi phục.
 
 Nếu trước đó đã import một phần, script sẽ in `STOP_PARTIAL_IMPORT` và **không** xóa các bảng. Khi đó kiểm tra danh sách bảng rồi lên kế hoạch khôi phục trong một schema thử nghiệm khác. Không chạy lại `restore-lab.sh` với file SQL cũ và không nhấn Install WordPress khi vẫn ở trang Welcome.
+
+## 10. Cài giao diện EcoShop Studio tự động (không cần thao tác WordPress Admin)
+
+Sau khi khôi phục WordPress cũ và chạy Compose thành công, chỉ cần:
+
+```bash
+cd ~/DTC245160041-ecoshop-de3
+git pull --ff-only
+bash scripts/install-ecoshop-demo.sh
+```
+
+Script sao lưu MySQL lab, đưa theme mới vào **de3_wp_data**, tạo trang chủ, danh mục, giới thiệu, liên hệ và **6 sản phẩm mẫu**. Hình minh họa sản phẩm dạng SVG nằm trong GitHub, không cần download ảnh ngoài. Các container và volume EcoShop gốc không bị chỉnh sửa. Xem [hướng dẫn giao diện demo](docs/site-demo.md).
+
+Trang demo: `http://192.168.254.128:18080`. Nếu cần xem bản mới, nhấn Ctrl+F5. Kết quả mong đợi `ECOSHOP_STUDIO_READY`.
