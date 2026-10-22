@@ -69,3 +69,16 @@ Bản Word `Bao_cao_De3_EcoShop_Hoan_Thien.docx` cập nhật các lần khôi p
 - Tài khoản GitHub, README, commit và thông tin bìa đã chính xác.
 
 Nếu chưa đủ, ghi rõ mục chờ nghiệm thu thay vì tự đánh dấu đạt 100%.
+
+
+## Phần mở rộng – Giỏ hàng và checkout COD demo (tùy chọn ngoài rubric)
+
+Sau khi chạy `bash scripts/install-demo-commerce.sh`, chụp thêm ảnh:
+
+1. Trang danh mục với nút **Thêm vào giỏ hàng**.
+2. Giỏ hàng với 2 sản phẩm, cập nhật số lượng và tổng tiền.
+3. Form thanh toán (chỉ dùng dữ liệu giả lập) và phương thức COD demo.
+4. Trang xác nhận có mã đơn hàng thử.
+5. WordPress Admin → **Đơn hàng demo** với đơn vừa lưu.
+
+Bảo mật: không có cổng thanh toán thật, không lưu số thẻ, không giao hàng; giá được tính phía server từ MySQL. Không đưa dữ liệu demo về số điện thoại/email thực lên GitHub hoặc ảnh báo cáo.
