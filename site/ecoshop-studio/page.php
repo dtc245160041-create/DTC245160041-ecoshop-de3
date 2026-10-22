@@ -1,6 +1,21 @@
 <?php
 defined('ABSPATH') || exit;
 get_header();
+if (is_page('gio-hang')) {
+    eco_cart_render_page();
+    get_footer();
+    return;
+}
+if (is_page('thanh-toan')) {
+    eco_cart_render_checkout();
+    get_footer();
+    return;
+}
+if (is_page('dat-hang-thanh-cong')) {
+    eco_cart_render_success();
+    get_footer();
+    return;
+}
 if (is_page('san-pham')) : ?>
   <section class="page-hero"><div class="container"><div class="breadcrumbs"><a href="<?php echo esc_url(home_url('/')); ?>">Trang chủ</a> / Sản phẩm</div><span class="eyebrow">Bộ sưu tập EcoShop</span>
     <h1 class="page-title">Chọn điều bạn thích.</h1><p>Khám phá những món đồ hiện đại dành cho làm việc, học tập và cuộc sống hằng ngày.</p>
