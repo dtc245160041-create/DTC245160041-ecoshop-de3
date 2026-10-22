@@ -41,7 +41,12 @@ def check(group,name,ok,note='',review=False):
 
 def get(url):
     try:
-        req=urllib.request.Request(url,headers={'User-Agent':'EcoShop-DE3-audit/1'})
+        # Query local Nginx with WordPress's canonical Host, so / does not
+        # redirect to LAN and falsely report that the HTML is unavailable.
+        request_headers={'User-Agent':'EcoShop-DE3-audit/1'}
+        if url.startswith('http://127.0.0.1:18080'):
+            request_headers['Host']='192.168.254.128:18080'
+        req=urllib.request.Request(url,headers=request_headers)
         with urllib.request.urlopen(req,timeout=18) as r:
             return r.status,dict(r.headers.items()),r.read(160000)
     except urllib.error.HTTPError as exc:
