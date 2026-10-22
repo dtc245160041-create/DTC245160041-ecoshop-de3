@@ -81,7 +81,7 @@ sudo docker compose exec -T wordpress php < scripts/apply-demo-site.php
 
 echo 'Checking the new home page through Nginx port 18080...'
 homepage_html="$(curl -fsS --max-time 20 http://127.0.0.1:18080/)"
-if [[ "$homepage_html" == *"Những điều nhỏ"* ]]; then
+if [[ "$homepage_html" == *"Đồ dùng tiện ích"* ]]; then
   echo 'ECOSHOP_HOMEPAGE_VERIFIED'
 else
   echo 'Theme script ran, but homepage text not verified. Check Nginx/WordPress logs.' >&2
