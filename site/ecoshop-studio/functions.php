@@ -8,6 +8,8 @@ defined('ABSPATH') || exit;
 if (is_admin()) {
     require_once get_template_directory() . '/inc/product-admin.php';
 }
+// The cart is available to visitors and checkout orders are stored only in the lab DB.
+require_once get_template_directory() . '/inc/cart-checkout.php';
 
 
 add_action('after_setup_theme', function () {
@@ -16,8 +18,8 @@ add_action('after_setup_theme', function () {
     add_theme_support('html5', array('search-form', 'gallery', 'caption', 'style', 'script'));
 });
 add_action('wp_enqueue_scripts', function () {
-    wp_enqueue_style('ecoshop-studio', get_stylesheet_uri(), array(), '1.2.0');
-    wp_enqueue_script('ecoshop-studio', get_template_directory_uri() . '/assets/app.js', array(), '1.2.0', true);
+    wp_enqueue_style('ecoshop-studio', get_stylesheet_uri(), array(), '1.3.0');
+    wp_enqueue_script('ecoshop-studio', get_template_directory_uri() . '/assets/app.js', array(), '1.3.0', true);
 });
 
 add_action('init', function () {
@@ -76,6 +78,7 @@ function eco_demo_render_card($id) {
         <div class="product-bottom"><div><strong><?php echo esc_html(eco_demo_money($price)); ?></strong><?php if ($old) : ?><del><?php echo esc_html(eco_demo_money($old)); ?></del><?php endif; ?></div>
           <a class="round-link" href="<?php echo esc_url(get_permalink($id)); ?>" aria-label="Chi tiết sản phẩm"><span aria-hidden="true">↗</span></a>
         </div>
+        <div class="eco-card-action"><?php eco_cart_add_button($id); ?></div>
       </div>
     </article>
     <?php
