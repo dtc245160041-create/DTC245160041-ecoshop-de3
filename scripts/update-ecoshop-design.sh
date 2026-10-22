@@ -24,7 +24,7 @@ if [[ -z "$id" || "$(sudo docker inspect -f '{{.State.Running}}' "$id" 2>/dev/nu
 fi
 
 echo 'Validating NEW theme PHP files with existing WordPress image before copying...'
-for file in functions.php header.php footer.php front-page.php page.php single-eco_product.php index.php inc/product-admin.php; do
+for file in functions.php header.php footer.php front-page.php page.php single-eco_product.php index.php inc/product-admin.php inc/cart-checkout.php; do
   sudo docker run --rm --network none --pull never \
     --entrypoint php \
     -v "$PWD/site/ecoshop-studio:/source:ro" \
