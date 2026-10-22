@@ -189,3 +189,23 @@ Kết quả được ghi vào thư mục riêng tư `evidence-de3/YYYYMMDD-HHMMS
 
 **Lưu ý:** Kết quả `REVIEW` đòi hỏi chụp ảnh thật trong Chrome/VM: thêm-sửa-xóa sản phẩm, biểu đồ dashboard Grafana, 3 query trong Explore, và điền thông tin bìa báo cáo. Chưa có screenshot thì **không** chấm đạt hoàn toàn. Sử dụng `docs/acceptance-checklist.md` và `docs/final-submission.md` để nộp.
 
+
+
+## 13. Giỏ hàng và thanh toán demo (COD mô phỏng)
+
+Đã thêm giỏ hàng theo trình duyệt, tăng/giảm số lượng, xóa sản phẩm, tổng tiền tính phía server và trang đặt hàng với thanh toán khi nhận hàng **chỉ mô phỏng**. Đơn lưu riêng trong WordPress Admin → **Đơn hàng demo**, không gửi tiền, không thu thập thông tin thẻ, không giao hàng thật.
+
+Cài vào **stack Compose mới** (giữ nguyên sản phẩm đã tạo và database gốc):
+
+```bash
+cd ~/DTC245160041-ecoshop-de3
+git pull --ff-only
+bash scripts/install-demo-commerce.sh
+```
+
+Đường dẫn sau cài:
+- `http://192.168.254.128:18080/gio-hang/`
+- `http://192.168.254.128:18080/thanh-toan/`
+- `http://192.168.254.128:18080/dat-hang-thanh-cong/`
+
+Bộ triển khai sao lưu SQL lab và theme trước khi cập nhật, sử dụng duy nhất `de3_*` volumes. **Không thực hiện giao dịch tiền thật.** Xem [hướng dẫn kiểm thử giỏ hàng và thanh toán](docs/cart-checkout-demo.md).
