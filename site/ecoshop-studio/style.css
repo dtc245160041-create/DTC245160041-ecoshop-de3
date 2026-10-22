@@ -3,7 +3,7 @@ Theme Name: EcoShop Studio
 Theme URI: https://github.com/dtc245160041-create/DTC245160041-ecoshop-de3
 Author: EcoShop Lab
 Description: Giao diện quảng bá sản phẩm hoàn chỉnh, tối ưu mobile và demo WordPress Docker Compose Đề 3.
-Version: 1.1.0
+Version: 1.2.0
 Requires PHP: 7.4
 Text Domain: ecoshop-studio
 */
@@ -340,3 +340,9 @@ body {
   .float-pill small { font-size: 11px; }
   .footer-links a, .footer-links span { font-size: 13px; }
 }
+
+/* Product detail content is edited directly in WordPress Admin. */
+.detail-description { margin: 24px 0 22px; padding: 20px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.detail-description h3 { font-size: 18px; font-weight: 700; margin: 0 0 10px; }
+.detail-description p { color: #53645a; font-size: 15px; line-height: 1.75; margin-bottom: 10px; }
+.detail-description ul { padding-left: 22px; }
