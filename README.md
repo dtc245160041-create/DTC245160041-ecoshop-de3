@@ -152,3 +152,22 @@ bash scripts/install-ecoshop-demo.sh
 Script sao lưu MySQL lab, đưa theme mới vào **de3_wp_data**, tạo trang chủ, danh mục, giới thiệu, liên hệ và **6 sản phẩm mẫu**. Hình minh họa sản phẩm dạng SVG nằm trong GitHub, không cần download ảnh ngoài. Các container và volume EcoShop gốc không bị chỉnh sửa. Xem [hướng dẫn giao diện demo](docs/site-demo.md).
 
 Trang demo: `http://192.168.254.128:18080`. Nếu cần xem bản mới, nhấn Ctrl+F5. Kết quả mong đợi `ECOSHOP_STUDIO_READY`.
+
+
+## 11. Quản lý sản phẩm WordPress – thêm / sửa / xóa
+
+Đã tích hợp trực tiếp trong theme EcoShop Studio, không cần plugin ngoài:
+
+- WordPress Admin → **Sản phẩm EcoShop** → **Thêm sản phẩm**; nhập tên, giá, danh mục, điểm nổi bật, mô tả, ảnh đại diện trong Thư viện Media rồi nhấn **Đăng**.
+- **Tất cả sản phẩm**: sửa thông tin, thay ảnh, chuyển Thùng rác hoặc khôi phục. Sản phẩm mới hiển thị tự động trong trang **/san-pham/**; trang chủ hiển thị 6 bài sản phẩm mới nhất.
+- Không có chức năng mua hàng thật; đây là website quảng bá sản phẩm minh họa.
+
+Áp dụng thay đổi trên bản **Compose mới** khi theme đã được cài:
+
+```bash
+cd ~/DTC245160041-ecoshop-de3
+git pull --ff-only
+bash scripts/update-ecoshop-design.sh
+```
+
+Script kiểm tra PHP, sao lưu theme trước khi chép; không chạy câu lệnh SQL hay thay đổi database. Xem [hướng dẫn quản lý sản phẩm](docs/product-management.md).
