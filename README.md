@@ -109,7 +109,7 @@ bash scripts/backup.sh
 
 Backup ở `private-backups/` (bị Git ignore); sao chép ra Windows hoặc ổ khác. **Không** chạy `docker compose down -v`, `docker volume prune`, `docker system prune --volumes`. Phải thay các App Password từng xuất hiện trong ảnh cũ.
 
-Repo chứa cấu hình và source dành cho môi trường lab. **Chưa chứng minh stack mới chạy được trên VM**; cần kiểm tra Compose v2, dịch vụ, dữ liệu và LogQL thật khi triển khai. Các ảnh trong báo cáo trước đây thuộc hệ thống Docker-run đã vận hành; không được coi là minh chứng tự động cho stack Compose mới.
+Repo chứa cấu hình và source dành cho môi trường lab. **Stack Compose mới đã có minh chứng từ ảnh Terminal người thực hiện gửi:** `SMOKE_TEST_BASIC_OK`, Prometheus 6/6 targets UP, MySQL healthy, trang WordPress port 18080 và kết quả khôi phục SQL thành công. Chưa có biên bản kiểm chứng LogQL, security headers và hình minh chứng dashboard Compose mới; xem mục nghiệm thu bên dưới. Các ảnh trong báo cáo trước đây thuộc hệ thống Docker-run đã vận hành; không được coi là minh chứng tự động cho stack Compose mới.
 
 
 ## 8. Lệnh chạy dễ nhất trên Ubuntu (không can thiệp stack cũ)
@@ -125,10 +125,10 @@ bash scripts/smoke-test.sh
 
 Khi cần mang dữ liệu **cũ** vào **volume lab mới**, dùng **sau** khi đã đọc cảnh báo:
 ```bash
-bash scripts/restore-lab.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_up_data
+bash scripts/restore-mysql8-compatible.sh /home/hoc/ecoshop-wordpress-recovered.sql wordpress_wp_data
 ```
 
-Sau import, script chỉ sửa `home`/`siteurl` trong **MySQL lab**, không đổi SQL nguồn hoặc MariaDB cũ. Nếu tên volume gốc khác, kiểm tra `sudo docker volume ls` và chọn volume chứa `wp-content`.
+Sau import, script chỉ sửa `home`/`siteurl` trong **MySQL lab**, không đổi SQL nguồn hoặc MariaDB cũ. Volume nguồn đã được xác nhận qua precheck là `wordpress_wp_data`. Không nhập lại SQL nếu schema mới đã có bảng; chỉ dùng restore khi database lab rỗng và có backup đầy đủ.
 
 **Báo cáo thực hành:** `docs/acceptance-checklist.md` mô tả chính xác ảnh minh chứng cần chụp; báo cáo DOCX 15 trang được bàn giao riêng. Lịch sử có ít nhất ba commit theo rubric và một số commit tăng cường chất lượng.
 
@@ -171,3 +171,21 @@ bash scripts/update-ecoshop-design.sh
 ```
 
 Script kiểm tra PHP, sao lưu theme trước khi chép; không chạy câu lệnh SQL hay thay đổi database. Xem [hướng dẫn quản lý sản phẩm](docs/product-management.md).
+
+
+## 12. Nghiệm thu cuối kỳ bằng một lệnh (an toàn, không xóa volume)
+
+Sau khi đồng bộ GitHub và khởi động stack mới, chạy trên **Ubuntu VM**, trong đúng thư mục repository:
+
+```bash
+cd ~/DTC245160041-ecoshop-de3
+git pull --ff-only
+python3 scripts/final-audit.py
+```
+
+Bộ kiểm thử đọc trạng thái của **12 dịch vụ**, kiểm tra MySQL, WordPress, phpMyAdmin, security headers, Prometheus Targets, Grafana health, network isolation, non-root, secrets và **3 truy vấn LogQL** vào Loki qua network giám sát. Nó phát sinh 3 lượt truy cập HTTP bình thường nhằm tạo log Nginx, không sửa bài đăng hay MySQL. Không dừng/restart container, không xóa volume.
+
+Kết quả được ghi vào thư mục riêng tư `evidence-de3/YYYYMMDD-HHMMSS/bao-cao-nghiem-thu.md` cùng các file bằng chứng đã lược bỏ mật khẩu. Thư mục đã nằm trong `.gitignore`. Nếu có `FAIL`, kiểm tra và sửa nguyên nhân thay vì lặp lại khôi phục SQL.
+
+**Lưu ý:** Kết quả `REVIEW` đòi hỏi chụp ảnh thật trong Chrome/VM: thêm-sửa-xóa sản phẩm, biểu đồ dashboard Grafana, 3 query trong Explore, và điền thông tin bìa báo cáo. Chưa có screenshot thì **không** chấm đạt hoàn toàn. Sử dụng `docs/acceptance-checklist.md` và `docs/final-submission.md` để nộp.
+
